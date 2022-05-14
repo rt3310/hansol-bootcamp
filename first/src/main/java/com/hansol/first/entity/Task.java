@@ -14,9 +14,11 @@ public class Task {
     private Long id;
     private String taskCode;
     private String taskName;
+    private Long memberId;
 
-    public Task(String taskCode, String taskName) {
+    public Task(String taskCode, String taskName, Long memberId) {
         this.taskCode = taskCode;
         this.taskName = taskName;
+        this.memberId = memberId;
     }
 }

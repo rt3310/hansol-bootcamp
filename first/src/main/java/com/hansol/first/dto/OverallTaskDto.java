@@ -15,33 +15,27 @@ public class OverallTaskDto {
     private String taskCode;
     @NotEmpty
     private String taskName;
-    @NotBlank
-    private String memberName;
-    @NotBlank
-    private String memberRank;
     @NotEmpty
     private String companyName;
     private String category;
     @NotBlank
     private String phoneNumber;
+    @NotNull
+    private Long memberId;
 
     public Task toTask() {
-        return new Task(taskCode, taskName);
+        return new Task(taskCode, taskName, memberId);
     }
 
-    public Member toMember() {
-        return new Member(memberName, memberRank);
+    public TaskCategory toTaskCategory(Long taskId) {
+        return new TaskCategory(category, taskId);
     }
 
-    public TaskCategory toTaskCategory(Long taskId, Long memberId) {
-        return new TaskCategory(category, taskId, memberId);
+    public TaskCompany toTaskCompany(Long taskId) {
+        return new TaskCompany(companyName, taskId);
     }
 
-    public TaskCompany toTaskCompany(Long taskId, Long memberId) {
-        return new TaskCompany(companyName, taskId, memberId);
-    }
-
-    public TaskPhone toTaskPhone(Long taskId, Long memberId) {
-        return new TaskPhone(phoneNumber, taskId, memberId);
+    public TaskPhone toTaskPhone(Long taskId) {
+        return new TaskPhone(phoneNumber, taskId);
     }
 }

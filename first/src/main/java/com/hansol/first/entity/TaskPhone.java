@@ -10,11 +10,9 @@ public class TaskPhone {
     private Long id;
     private String phoneNumber;
     private Long taskId;
-    private Long memberId;
 
-    public TaskPhone(String phoneNumber, Long taskId, Long memberId) {
+    public TaskPhone(String phoneNumber, Long taskId) {
         this.phoneNumber = phoneNumber;
         this.taskId = taskId;
-        this.memberId = memberId;
     }
 }

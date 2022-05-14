@@ -1,6 +1,7 @@
 package com.hansol.first.mapper;
 
 import com.hansol.first.dto.OverallTaskDto;
+import com.hansol.first.dto.TaskDto;
 import com.hansol.first.entity.Task;
 import com.hansol.first.entity.TaskCategory;
 import com.hansol.first.entity.TaskCompany;
@@ -16,14 +17,21 @@ public interface TaskMapper {
     Long saveTaskCompany(TaskCompany taskCompany);
     Long saveTaskCategory(TaskCategory taskCategory);
     Long saveTaskPhone(TaskPhone taskPhone);
-    void updateOverallTask(OverallTaskDto overallTaskDto);
+
+    List<Task> findAllTask();
+    List<TaskCompany> findAllTaskCompany();
+    List<TaskCategory> findAllTaskCategory();
+    List<TaskPhone> findAllTaskPhone();
     List<OverallTaskDto> findAllOverallTask();
-    OverallTaskDto findOverallTaskById(Long id);
+
+    void updateTask(Task task);
+    void updateTaskCompany(TaskCompany taskCompany);
+    void updateTaskCategory(TaskCategory taskCategory);
+    void updateTaskPhone(TaskPhone taskPhone);
+    void updateOverallTask(OverallTaskDto overallTaskDto);
+
     void deleteTaskById(Long id);
     void deleteTaskCompanyByTaskId(Long taskId);
     void deleteTaskCategoryByTaskId(Long taskId);
     void deleteTaskPhoneByTaskId(Long taskId);
-    void deleteTaskCompanyByMemberId(Long memberId);
-    void deleteTaskCategoryByMemberId(Long memberId);
-    void deleteTaskPhoneByMemberId(Long memberId);
 }

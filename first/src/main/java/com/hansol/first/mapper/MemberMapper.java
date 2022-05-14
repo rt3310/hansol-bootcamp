@@ -10,8 +10,11 @@ import java.util.List;
 public interface MemberMapper {
 
     Long save(Member member);
-    void update(Member member);
+
     List<Member> findAll();
     Member findById(Long id);
+
+    void update(Member member);
+
     void deleteById(Long id);
 }

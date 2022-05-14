@@ -3,32 +3,59 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hansol.first.mapper.TaskMapper">
     <insert id="saveTask" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        INSERT INTO task(task_code, task_name) VALUES(#{taskCode}, #{taskName});
+        INSERT INTO task(task_code, task_name, member_id) VALUES(#{taskCode}, #{taskName}, #{memberId});
     </insert>
     <insert id="saveTaskCompany" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        INSERT INTO task_company(company_name, task_id, member_id) VALUES(#{companyName}, #{taskId}, #{memberId});
+        INSERT INTO task_company(company_name, task_id) VALUES(#{companyName}, #{taskId});
     </insert>
     <insert id="saveTaskCategory" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        INSERT INTO task_category(category, task_id, member_id) VALUES(#{category}, #{taskId}, #{memberId});
+        INSERT INTO task_category(category, task_id) VALUES(#{category}, #{taskId});
     </insert>
     <insert id="saveTaskPhone" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        INSERT INTO task_phone(phone_number, task_id, member_id) VALUES(#{phoneNumber}, #{taskId}, #{memberId});
+        INSERT INTO task_phone(phone_number, task_id) VALUES(#{phoneNumber}, #{taskId});
     </insert>
+    <update id="updateTask">
+        UPDATE task
+        SET task_code=#{taskCode}, task_name=#{taskName}
+        WHERE id = #{id}
+    </update>
+    <update id="updateTaskCompany">
+        UPDATE task_company
+        SET company_name=#{companyName}, task_id=#{taskId}
+        WHERE id = #{id}
+    </update>
+    <update id="updateTaskCategory">
+        UPDATE task_category
+        SET category=#{category}, task_id=#{taskId}
+        WHERE id = #{id}
+    </update>
+    <update id="updateTaskPhone">
+        UPDATE task_phone
+        SET phone_number=#{phoneNumber}, task_id=#{taskId}
+        WHERE id = #{id}
+    </update>
     <update id="updateOverallTask">
-        UPDATE task t, member m, task_company c, task_category g, task_phone p
-        SET t.task_code=#{taskCode}, t.task_name=#{taskName}, m.member_name=#{memberName}, m.member_rank=#{memberRank}, c.company_name=#{companyName},
-            g.category=#{category}, p.phone_number=#{phoneNumber}
+        UPDATE task t, task_company c, task_category g, task_phone p
+        SET t.task_code=#{taskCode}, t.task_name=#{taskName}, c.company_name=#{companyName},
+            g.category=#{category}, p.phone_number=#{phoneNumber}, t.member_id=#{memberId}
         WHERE t.id = #{id};
     </update>
     <select id="findAllOverallTask" resultType="OverallTaskDto">
-        SELECT t.id, t.task_code, t.task_name, m.member_name, m.member_rank, c.company_name, g.category, p.phone_number
-        FROM task t, member m, task_company c, task_category g, task_phone p
-        WHERE t.id = c.task_id = g.task_id = p.task_id and c.member_id = m.id;
+        SELECT t.id, t.task_code, t.task_name, c.company_name, g.category, p.phone_number, t.member_id
+        FROM task t, task_company c, task_category g, task_phone p
+        WHERE t.id = c.task_id and t.id = g.task_id and t.id = p.task_id;
     </select>
-    <select id="findOverallTaskById" resultType="OverallTaskDto">
-        SELECT t.id, t.task_code, t.task_name, m.member_name, m.member_rank, c.company_name, g.category, p.phone_number
-        FROM task t, member m, task_company c, task_category g, task_phone p
-        WHERE #{id} = t.id = c.task_id = g.task_id = p.task_id and c.member_id = m.id;
+    <select id="findAllTask" resultType="Task">
+        SELECT * FROM task;
+    </select>
+    <select id="findAllTaskCompany" resultType="TaskCompany">
+        SELECT * FROM task_company;
+    </select>
+    <select id="findAllTaskCategory" resultType="TaskCategory">
+        SELECT * FROM task_category;
+    </select>
+    <select id="findAllTaskPhone" resultType="TaskPhone">
+        SELECT * FROM task_phone;
     </select>
     <delete id="deleteTaskById">
         DELETE FROM task WHERE id = #{id};
@@ -41,14 +68,5 @@
     </delete>
     <delete id="deleteTaskPhoneByTaskId">
         DELETE FROM task_phone WHERE task_id = #{taskId};
-    </delete>
-    <delete id="deleteTaskCompanyByMemberId">
-        DELETE FROM task_company WHERE member_id = #{memberId};
-    </delete>
-    <delete id="deleteTaskCategoryByMemberId">
-        DELETE FROM task_category WHERE member_id = #{memberId};
-    </delete>
-    <delete id="deleteTaskPhoneByMemberId">
-        DELETE FROM task_phone WHERE member_id = #{memberId};
     </delete>
 </mapper>

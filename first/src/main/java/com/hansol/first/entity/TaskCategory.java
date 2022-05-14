@@ -10,11 +10,9 @@ public class TaskCategory {
     private Long id;
     private String category;
     private Long taskId;
-    private Long memberId;
 
-    public TaskCategory(String category, Long taskId, Long memberId) {
+    public TaskCategory(String category, Long taskId) {
         this.category = category;
         this.taskId = taskId;
-        this.memberId = memberId;
     }
 }

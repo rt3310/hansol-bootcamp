@@ -26,7 +26,7 @@ public class MemberController {
 
     @GetMapping("/member/{id}")
     public Response<Member> getMember(@PathVariable Long id) {
-        return responseService.getResult("", memberService.findMemberById(id));
+        return responseService.getResult("", memberService.findMemberById(id).get());
     }
 
     @PostMapping("/member")
@@ -41,7 +41,11 @@ public class MemberController {
 
     @DeleteMapping("/member/{id}")
     public Response deleteMember(@PathVariable Long id) {
-        memberService.deleteMemberById(id);
+        try {
+            memberService.deleteMemberById(id);
+        } catch (Exception e) {
+            return responseService.getFailResult("member delete");
+        }
         return responseService.getSuccessResult();
     }
 }

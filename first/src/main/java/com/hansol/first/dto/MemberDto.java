@@ -8,7 +8,6 @@ import javax.validation.constraints.NotBlank;
 
 @Getter @Setter
 public class MemberDto {
-    private Long id;
     @NotBlank
     private String memberName;
     @NotBlank
