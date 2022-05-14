@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="Hansol 업무 시스템">
+    <meta name="author" content="Wonho Seo">
+    <!-- <meta name="keywords" content="web, system, hansol"> -->
+
+    <!--Open Graph-->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Hansol 업무 시스템">
+    <meta property="og:description" content="Hansol 업무 시스템">
+    <!-- <meta property="og:image" content="resources/-"> -->
+    <!-- <meta property="og:url" content="https://localhost:8080/"> -->
+
+    <!--fabicon-->
+    <!-- <link rel="icon" href="resources/social-care.png"> -->
+    <!-- <link rel="apple-touch-icon" href="resources/social-care.png"> -->
+    <!-- <link rel="short icon" type="image/x-icon" href="resources/social-care.png"> -->
+
+    <link rel="stylesheet" href="../static/reset.css">
+    <link rel="stylesheet" href="../static/common.css">
+    <link rel="stylesheet" href="../static/task/task_modify.css">
+    <title>Hansol R&R</title>
+</head>
+
+<body>
+    <div id="root-wrap">
+        <header>
+            <div class="wrap">
+                <div class="header-container">
+                    <div class="logo-area">
+                        <a href="/" id="logo">
+                            <img src="../static/images/hansol.jpeg" alt="logo">
+                        </a>
+                    </div>
+                    <ul class="nav">
+                        <li>
+                            <a href="#">업무목록</a>
+                        </li>
+                        <li>
+                            <a href="#">업무등록</a>
+                        </li>
+                        <li>
+                            <a href="#">환경설정</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+        <section class="main">
+            <div class="wrap">
+                <div class="title-container">
+                    <h2 class="title">
+                        업무 수정
+                    </h2>
+                </div>
+                <div class="task-container">
+                    <div class="task-area">
+                        <div class="task-code-area">
+                            <div class="sub-title">
+                                <h3>업무코드</h3>
+                            </div>
+                            <div class="contents-area">
+                                <select name="task-code-head" id="task-code-head">
+                                    <option value="W">W</option>
+                                </select>
+                                <span> - </span>
+                                <input type="text" id="task-code-input">
+                            </div>
+                        </div>
+                        <div class="task-name-area">
+                            <div class="sub-title">
+                                <h3>업무명</h3>
+                            </div>
+                            <div class="contents-area">
+                                <input type="text" id="task-name-input">
+                            </div>
+                        </div>
+                        <div class="company-area">
+                            <div class="sub-title">
+                                <h3>회사</h3>
+                            </div>
+                            <div class="contents-area">
+                                <label>
+                                    <input type="checkbox" name="pns-check" id="pns-check"> PNS
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="inticube-check" id="inticube-check"> 인티큐브
+                                </label>
+                            </div>
+                        </div>
+                        <div class="member-name-area">
+                            <div class="sub-title">
+                                <h3>담당자</h3>
+                            </div>
+                            <div class="contents-area">
+                                <input type="text" id="member-name-input">
+                            </div>
+                        </div>
+                        <div class="member-rank-area">
+                            <div class="sub-title">
+                                <h3>직급</h3>
+                            </div>
+                            <div class="contents-area">
+                                <select name="member-rank-select" id="member-rank-select">
+                                    <option value="employee">사원</option>
+                                    <option value="seniority">선임</option>
+                                    <option value="responsibility">책임</option>
+                                    <option value="top">수석</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="task-category-area">
+                            <div class="sub-title">
+                                <h3>종류</h3>
+                            </div>
+                            <div class="contents-area">
+                                <input type="text" id="task-category-input">
+                            </div>
+                        </div>
+                        <div class="phone-area">
+                            <div class="sub-title">
+                                <h3>전화번호</h3>
+                            </div>
+                            <div class="contents-area">
+                                <input type="text" id="phone-input">
+                            </div>
+                        </div>
+                        <div class="access-area">
+                            <a href="#" class="complete-btn">완료</a>
+                            <a href="#" class="cancel-btn">취소</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>

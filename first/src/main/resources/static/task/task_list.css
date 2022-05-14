@@ -1,0 +1,47 @@
+@charset "UTF-8";
+
+.title-container {
+    height: 50px;
+    margin: 30px 0 0;
+    display: flex;
+    align-items: center;
+}
+
+.title {
+    padding: 0 20px;
+}
+
+.task-list {
+    width: 100%;
+    text-align: center;
+}
+
+.task-list td {
+    padding: 5px 0;
+}
+
+.task-list th {
+    border-top: 2px solid #5a5656;
+    border-bottom: 2px solid #5a5656;
+}
+
+.task-list td {
+    border-bottom: 1px solid #5a5656;
+}
+
+.task-list-body:hover {
+    background-color: #0001;
+    cursor: pointer;
+}
+
+.modify-btn {
+    background-color: #fc8;
+    padding: 3px 5px;
+    border-radius: 3px;
+}
+
+.delete-btn {
+    background-color: #f88;
+    padding: 3px 5px;
+    border-radius: 3px;
+}

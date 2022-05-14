@@ -1,0 +1,44 @@
+@charset "UTF-8";
+/* wrap */
+#root-wrap {
+    min-width: 1680px;
+    min-height: 100vh;
+    /*background: linear-gradient(to right, #7F7FD5, #86A8E7, #91EAE4);*/
+}
+
+.wrap {
+    width: 1680px;
+    height: 100%;
+    margin: 0 auto;
+}
+
+header {
+    width: 100%;
+    height: 120px;
+    background-color: #fff;
+    border-bottom: 1px solid #000;
+}
+
+.header-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+#logo img {
+    width: 200px;
+}
+
+.nav {
+    display: flex;
+    margin: 0 0 0 100px;
+}
+
+.nav > li {
+    font-size: 18px;
+    margin: 0 30px -5px;
+}
+
+.nav > li:hover {
+    color: #5a5656;
+}

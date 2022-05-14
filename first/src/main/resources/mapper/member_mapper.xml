@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hansol.first.mapper.MemberMapper">
+    <insert id="save" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO member(member_name, member_rank) VALUES(#{memberName}, #{memberRank});
+    </insert>
+    <update id="update">
+        UPDATE member
+        SET member_name=#{memberName}, member_rank=#{memberRank}
+        WHERE id = #{id};
+    </update>
+    <select id="findAll" resultType="Member">
+        SELECT * FROM member;
+    </select>
+    <select id="findById" resultType="Member">
+        SELECT * FROM member WHERE id = #{id};
+    </select>
+    <delete id="deleteById">
+        DELETE FROM member WHERE id = #{id};
+    </delete>
+</mapper>
