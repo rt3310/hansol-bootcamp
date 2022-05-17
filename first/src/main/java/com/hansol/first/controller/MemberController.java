@@ -6,6 +6,7 @@ import com.hansol.first.response.Response;
 import com.hansol.first.service.MemberService;
 import com.hansol.first.service.ResponseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,12 +31,18 @@ public class MemberController {
     }
 
     @PostMapping("/member")
-    public Response<Member> saveMember(@RequestBody @Validated MemberDto memberDto) {
+    public Response<Member> saveMember(@RequestBody @Validated MemberDto memberDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return responseService.getFailResult("valid");
+        }
         return responseService.getResult("", memberService.saveMember(memberDto));
     }
 
     @PutMapping("/member/{id}")
-    public Response<Member> modifyMember(@PathVariable Long id, @RequestBody @Validated MemberDto memberDto) {
+    public Response<Member> modifyMember(@PathVariable Long id, @RequestBody @Validated MemberDto memberDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return responseService.getFailResult("valid");
+        }
         return responseService.getResult("", memberService.modifyMember(id, memberDto));
     }
 

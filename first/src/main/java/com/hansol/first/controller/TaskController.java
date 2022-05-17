@@ -8,6 +8,7 @@ import com.hansol.first.response.Response;
 import com.hansol.first.service.ResponseService;
 import com.hansol.first.service.TaskService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,12 +33,18 @@ public class TaskController {
     }
 
     @PostMapping("/task")
-    public Response<OverallTaskDto> saveTask(@RequestBody @Validated OverallTaskDto overallTaskDto) {
+    public Response<OverallTaskDto> saveTask(@RequestBody @Validated OverallTaskDto overallTaskDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return responseService.getFailResult("valid");
+        }
         return responseService.getResult("", taskService.saveOverallTask(overallTaskDto));
     }
 
     @PutMapping("/task/{id}")
-    public Response<OverallTaskDto> modifyTask(@PathVariable Long id, @RequestBody @Validated OverallTaskDto overallTaskDto) {
+    public Response<OverallTaskDto> modifyTask(@PathVariable Long id, @RequestBody @Validated OverallTaskDto overallTaskDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return responseService.getFailResult("valid");
+        }
         return responseService.getResult("", taskService.modifyOverallTask(id, overallTaskDto));
     }
 
@@ -62,12 +69,18 @@ public class TaskController {
     }
 
     @PostMapping("/task/category")
-    public Response<TaskCategory> saveTaskCategory(@RequestBody @Validated TaskCategoryDto taskCategoryDto) {
+    public Response<TaskCategory> saveTaskCategory(@RequestBody @Validated TaskCategoryDto taskCategoryDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return responseService.getFailResult("valid");
+        }
         return responseService.getResult("", taskService.saveTaskCategory(taskCategoryDto));
     }
 
     @PutMapping("/task/category/{id}")
-    public Response<TaskCategory> modifyTaskCategory(@PathVariable Long id, @RequestBody @Validated TaskCategoryDto taskCategoryDto) {
+    public Response<TaskCategory> modifyTaskCategory(@PathVariable Long id, @RequestBody @Validated TaskCategoryDto taskCategoryDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return responseService.getFailResult("valid");
+        }
         return responseService.getResult("", taskService.modifyTaskCategory(id, taskCategoryDto));
     }
 
@@ -92,12 +105,18 @@ public class TaskController {
     }
 
     @PostMapping("/task/company")
-    public Response<TaskCompany> saveTaskCompany(@RequestBody @Validated TaskCompanyDto taskCompanyDto) {
+    public Response<TaskCompany> saveTaskCompany(@RequestBody @Validated TaskCompanyDto taskCompanyDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return responseService.getFailResult("valid");
+        }
         return responseService.getResult("", taskService.saveTaskCompany(taskCompanyDto));
     }
 
     @PutMapping("/task/company/{id}")
-    public Response<TaskCompany> modifyTaskCompany(@PathVariable Long id, @RequestBody @Validated TaskCompanyDto taskCompanyDto) {
+    public Response<TaskCompany> modifyTaskCompany(@PathVariable Long id, @RequestBody @Validated TaskCompanyDto taskCompanyDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return responseService.getFailResult("valid");
+        }
         return responseService.getResult("", taskService.modifyTaskCompany(id, taskCompanyDto));
     }
 
@@ -122,12 +141,18 @@ public class TaskController {
     }
 
     @PostMapping("/task/phone")
-    public Response<TaskPhone> saveTaskPhone(@RequestBody @Validated TaskPhoneDto taskPhoneDto) {
+    public Response<TaskPhone> saveTaskPhone(@RequestBody @Validated TaskPhoneDto taskPhoneDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return responseService.getFailResult("valid");
+        }
         return responseService.getResult("", taskService.saveTaskPhone(taskPhoneDto));
     }
 
     @PutMapping("/task/phone/{id}")
-    public Response<TaskPhone> modifyTaskPhone(@PathVariable Long id, @RequestBody @Validated TaskPhoneDto taskPhoneDto) {
+    public Response<TaskPhone> modifyTaskPhone(@PathVariable Long id, @RequestBody @Validated TaskPhoneDto taskPhoneDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return responseService.getFailResult("valid");
+        }
         return responseService.getResult("", taskService.modifyTaskPhone(id, taskPhoneDto));
     }
 
