@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Getter @Setter
 public class TaskDto {
@@ -16,10 +15,10 @@ public class TaskDto {
     private String taskCode;
     @NotEmpty
     private String taskName;
-    @NotNull
+    private Boolean memberAssigned;
     private Long memberId;
 
     public Task toTask() {
-        return new Task(taskCode, taskName, memberId);
+        return new Task(taskCode, taskName, memberAssigned, memberId);
     }
 }

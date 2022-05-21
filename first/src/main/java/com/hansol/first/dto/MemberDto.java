@@ -12,8 +12,10 @@ public class MemberDto {
     private String memberName;
     @NotBlank
     private String memberRank;
+    @NotBlank
+    private String phone;
 
     public Member toMember() {
-        return new Member(memberName, memberRank);
+        return new Member(memberName, memberRank, phone);
     }
 }

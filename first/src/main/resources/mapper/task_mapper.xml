@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hansol.first.mapper.TaskMapper">
     <insert id="saveTask" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        INSERT INTO task(task_code, task_name, member_id) VALUES(#{taskCode}, #{taskName}, #{memberId});
+        INSERT INTO task(task_code, task_name, member_assigned, member_id) VALUES(#{taskCode}, #{taskName}, #{memberAssigned}, #{memberId});
     </insert>
     <insert id="saveTaskCompany" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         INSERT INTO task_company(company_name, task_id) VALUES(#{companyName}, #{taskId});
@@ -11,12 +11,9 @@
     <insert id="saveTaskCategory" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         INSERT INTO task_category(category, task_id) VALUES(#{category}, #{taskId});
     </insert>
-    <insert id="saveTaskPhone" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        INSERT INTO task_phone(phone_number, task_id) VALUES(#{phoneNumber}, #{taskId});
-    </insert>
     <update id="updateTask">
         UPDATE task
-        SET task_code=#{taskCode}, task_name=#{taskName}
+        SET task_code=#{taskCode}, task_name=#{taskName}, member_assigned=#{memberAssigned}, member_id=#{memberId}
         WHERE id = #{id}
     </update>
     <update id="updateTaskCompany">
@@ -29,33 +26,19 @@
         SET category=#{category}, task_id=#{taskId}
         WHERE id = #{id}
     </update>
-    <update id="updateTaskPhone">
-        UPDATE task_phone
-        SET phone_number=#{phoneNumber}, task_id=#{taskId}
-        WHERE id = #{id}
+    <update id="updateTaskMemberToNull">
+        UPDATE task
+        SET member_id = NULL
+        WHERE member_id=#{memberId}
     </update>
-    <update id="updateOverallTask">
-        UPDATE task t, task_company c, task_category g, task_phone p
-        SET t.task_code=#{taskCode}, t.task_name=#{taskName}, c.company_name=#{companyName},
-            g.category=#{category}, p.phone_number=#{phoneNumber}, t.member_id=#{memberId}
-        WHERE t.id = #{id};
-    </update>
-    <select id="findAllOverallTask" resultType="OverallTaskDto">
-        SELECT t.id, t.task_code, t.task_name, c.company_name, g.category, p.phone_number, t.member_id
-        FROM task t, task_company c, task_category g, task_phone p
-        WHERE t.id = c.task_id and t.id = g.task_id and t.id = p.task_id;
-    </select>
     <select id="findAllTask" resultType="Task">
-        SELECT * FROM task;
+        SELECT id, task_code, task_name, member_assigned, member_id FROM task;
     </select>
     <select id="findAllTaskCompany" resultType="TaskCompany">
-        SELECT * FROM task_company;
+        SELECT id, company_name, task_id FROM task_company;
     </select>
     <select id="findAllTaskCategory" resultType="TaskCategory">
-        SELECT * FROM task_category;
-    </select>
-    <select id="findAllTaskPhone" resultType="TaskPhone">
-        SELECT * FROM task_phone;
+        SELECT id, category, task_id FROM task_category;
     </select>
     <delete id="deleteTaskById">
         DELETE FROM task WHERE id = #{id};
@@ -65,8 +48,5 @@
     </delete>
     <delete id="deleteTaskCategoryByTaskId">
         DELETE FROM task_category WHERE task_id = #{taskId};
-    </delete>
-    <delete id="deleteTaskPhoneByTaskId">
-        DELETE FROM task_phone WHERE task_id = #{taskId};
     </delete>
 </mapper>

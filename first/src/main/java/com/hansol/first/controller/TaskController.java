@@ -3,7 +3,6 @@ package com.hansol.first.controller;
 import com.hansol.first.dto.*;
 import com.hansol.first.entity.TaskCategory;
 import com.hansol.first.entity.TaskCompany;
-import com.hansol.first.entity.TaskPhone;
 import com.hansol.first.response.Response;
 import com.hansol.first.service.ResponseService;
 import com.hansol.first.service.TaskService;
@@ -13,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -29,7 +29,11 @@ public class TaskController {
 
     @GetMapping("/task/{id}")
     public Response<OverallTaskDto> getTask(@PathVariable Long id) {
-        return responseService.getResult("", taskService.findOverallTaskById(id).get());
+        Optional<OverallTaskDto> overallTask = taskService.findOverallTaskById(id);
+        if (overallTask.isEmpty()) {
+            return responseService.getFailResult("not exist");
+        }
+        return responseService.getResult("", overallTask.get());
     }
 
     @PostMapping("/task")
@@ -37,15 +41,19 @@ public class TaskController {
         if (bindingResult.hasErrors()) {
             return responseService.getFailResult("valid");
         }
-        return responseService.getResult("", taskService.saveOverallTask(overallTaskDto));
+        OverallTaskDto saveResult = taskService.saveOverallTask(overallTaskDto);
+        if (saveResult == null) {
+            return responseService.getFailResult("member not exist");
+        }
+        return responseService.getResult("", saveResult);
     }
 
     @PutMapping("/task/{id}")
     public Response<OverallTaskDto> modifyTask(@PathVariable Long id, @RequestBody @Validated OverallTaskDto overallTaskDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors() || id != overallTaskDto.getId()) {
             return responseService.getFailResult("valid");
         }
-        return responseService.getResult("", taskService.modifyOverallTask(id, overallTaskDto));
+        return responseService.getResult("", taskService.modifyOverallTask(overallTaskDto));
     }
 
     @DeleteMapping("/task/{id}")
@@ -65,7 +73,11 @@ public class TaskController {
 
     @GetMapping("/task/category/{id}")
     public Response<TaskCategory> getTaskCategory(@PathVariable Long id) {
-        return responseService.getResult("", taskService.findTaskCategoryById(id));
+        Optional<TaskCategory> taskCategory = taskService.findTaskCategoryById(id);
+        if (taskCategory.isEmpty()) {
+            return responseService.getFailResult("not exist");
+        }
+        return responseService.getResult("", taskCategory.get());
     }
 
     @PostMapping("/task/category")
@@ -101,7 +113,11 @@ public class TaskController {
 
     @GetMapping("/task/company/{id}")
     public Response<TaskCompany> getTaskCompany(@PathVariable Long id) {
-        return responseService.getResult("", taskService.findTaskCompanyById(id));
+        Optional<TaskCompany> taskCompany = taskService.findTaskCompanyById(id);
+        if (taskCompany.isEmpty()) {
+            return responseService.getFailResult("not exist");
+        }
+        return responseService.getResult("", taskCompany.get());
     }
 
     @PostMapping("/task/company")
@@ -124,42 +140,6 @@ public class TaskController {
     public Response deleteTaskCompany(@PathVariable Long id) {
         try {
             taskService.deleteTaskCompanyById(id);
-        } catch (Exception e) {
-            return responseService.getFailResult("task delete");
-        }
-        return responseService.getSuccessResult();
-    }
-
-    @GetMapping("/task/phones")
-    public Response<TaskPhone> getTaskPhones() {
-        return responseService.getResult("category", taskService.findAllTaskPhone());
-    }
-
-    @GetMapping("/task/phone/{id}")
-    public Response<TaskPhone> getTaskPhone(@PathVariable Long id) {
-        return responseService.getResult("", taskService.findTaskPhoneById(id));
-    }
-
-    @PostMapping("/task/phone")
-    public Response<TaskPhone> saveTaskPhone(@RequestBody @Validated TaskPhoneDto taskPhoneDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return responseService.getFailResult("valid");
-        }
-        return responseService.getResult("", taskService.saveTaskPhone(taskPhoneDto));
-    }
-
-    @PutMapping("/task/phone/{id}")
-    public Response<TaskPhone> modifyTaskPhone(@PathVariable Long id, @RequestBody @Validated TaskPhoneDto taskPhoneDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return responseService.getFailResult("valid");
-        }
-        return responseService.getResult("", taskService.modifyTaskPhone(id, taskPhoneDto));
-    }
-
-    @DeleteMapping("/task/phone/{id}")
-    public Response deleteTaskPhone(@PathVariable Long id) {
-        try {
-            taskService.deleteTaskPhoneById(id);
         } catch (Exception e) {
             return responseService.getFailResult("task delete");
         }

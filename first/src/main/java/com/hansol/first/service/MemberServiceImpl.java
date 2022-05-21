@@ -41,12 +41,14 @@ public class MemberServiceImpl implements MemberService{
         Member member = memberMapper.findById(memberId);
         member.setMemberName(memberDto.getMemberName());
         member.setMemberRank(memberDto.getMemberRank());
+        member.setPhone(memberDto.getPhone());
         memberMapper.update(member);
         return member;
     }
 
     @Override
     public void deleteMemberById(Long id) {
+        taskMapper.updateTaskMemberToNull(id);
         memberMapper.deleteById(id);
     }
 }

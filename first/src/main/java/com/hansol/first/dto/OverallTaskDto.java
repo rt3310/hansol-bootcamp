@@ -2,40 +2,51 @@ package com.hansol.first.dto;
 
 import com.hansol.first.entity.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter @Setter
+@NoArgsConstructor
 public class OverallTaskDto {
     private Long id;
     @NotBlank
     private String taskCode;
     @NotEmpty
     private String taskName;
-    @NotEmpty
-    private String companyName;
-    private String category;
-    @NotBlank
-    private String phoneNumber;
-    @NotNull
+    private List<TaskCompanyDto> companies;
+    private List<TaskCategoryDto> categories;
+    private Boolean memberAssigned;
     private Long memberId;
 
+    public OverallTaskDto(Task task, List<TaskCompanyDto> companies, List<TaskCategoryDto> categories, Boolean memberAssigned, Long memberId) {
+        this.id = task.getId();
+        this.taskCode = task.getTaskCode();
+        this.taskName = task.getTaskName();
+        this.companies = companies;
+        this.categories = categories;
+        this.memberAssigned = memberAssigned;
+        this.memberId = memberId;
+    }
+
     public Task toTask() {
-        return new Task(taskCode, taskName, memberId);
+        return new Task(taskCode, taskName, memberAssigned, memberId);
     }
 
-    public TaskCategory toTaskCategory(Long taskId) {
-        return new TaskCategory(category, taskId);
+    public List<TaskCategory> toTaskCategories() {
+        return categories.stream()
+                .map(c -> c.toTaskCategory())
+                .collect(Collectors.toList());
     }
 
-    public TaskCompany toTaskCompany(Long taskId) {
-        return new TaskCompany(companyName, taskId);
-    }
-
-    public TaskPhone toTaskPhone(Long taskId) {
-        return new TaskPhone(phoneNumber, taskId);
+    public List<TaskCompany> toTaskCompanies() {
+        return companies.stream()
+                .map(c -> c.toTaskCompany())
+                .collect(Collectors.toList());
     }
 }

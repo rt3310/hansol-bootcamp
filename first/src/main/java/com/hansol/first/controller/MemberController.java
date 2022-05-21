@@ -27,7 +27,7 @@ public class MemberController {
 
     @GetMapping("/member/{id}")
     public Response<Member> getMember(@PathVariable Long id) {
-        return responseService.getResult("", memberService.findMemberById(id).get());
+        return responseService.getResult("", memberService.findMemberById(id).orElse(null));
     }
 
     @PostMapping("/member")

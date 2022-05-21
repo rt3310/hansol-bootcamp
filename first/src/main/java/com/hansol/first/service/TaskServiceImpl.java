@@ -5,12 +5,15 @@ import com.hansol.first.entity.*;
 import com.hansol.first.mapper.MemberMapper;
 import com.hansol.first.mapper.TaskMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
@@ -40,26 +43,20 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskPhone saveTaskPhone(TaskPhoneDto taskPhoneDto) {
-        TaskPhone taskPhone = taskPhoneDto.toTaskPhone();
-        taskMapper.saveTaskPhone(taskPhone);
-        return taskPhone;
-    }
-
-    @Override
     public OverallTaskDto saveOverallTask(OverallTaskDto overallTaskDto) {
         Member member = memberMapper.findById(overallTaskDto.getMemberId());
-        if (member == null) {
-            return null;
-        }
         Task task = overallTaskDto.toTask();
         taskMapper.saveTask(task);
-        memberMapper.save(member);
+        if (member != null) {
+            memberMapper.save(member);
+        }
 
         Long taskId = task.getId();
-        taskMapper.saveTaskCompany(overallTaskDto.toTaskCompany(taskId));
-        taskMapper.saveTaskCategory(overallTaskDto.toTaskCategory(taskId));
-        taskMapper.saveTaskPhone(overallTaskDto.toTaskPhone(taskId));
+        overallTaskDto.toTaskCompanies().stream()
+                .forEach(c -> taskMapper.saveTaskCompany(c));
+        overallTaskDto.toTaskCategories().stream()
+                .forEach(c -> taskMapper.saveTaskCategory(c));
+
         overallTaskDto.setId(taskId);
         return overallTaskDto;
     }
@@ -80,13 +77,18 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskPhone> findAllTaskPhone() {
-        return taskMapper.findAllTaskPhone();
-    }
-
-    @Override
     public List<OverallTaskDto> findAllOverallTask() {
-        return taskMapper.findAllOverallTask();
+        return taskMapper.findAllTask().stream()
+                .map(t -> {
+                    List<TaskCompanyDto> taskCompanyDtos = findTaskCompaniesByTaskId(t.getId()).stream()
+                            .map(c -> new TaskCompanyDto(c))
+                            .collect(Collectors.toList());
+                    List<TaskCategoryDto> taskCategoryDtos = findTaskCategoriesByTaskId(t.getId()).stream()
+                            .map(c -> new TaskCategoryDto(c))
+                            .collect(Collectors.toList());
+                    return new OverallTaskDto(t, taskCompanyDtos, taskCategoryDtos, t.getMemberAssigned(), t.getMemberId());
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -104,20 +106,6 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Optional<TaskCategory> findTaskCategoryById(Long id) {
-        return findAllTaskCategory().stream()
-                .filter(c -> c.getId() == id)
-                .findAny();
-    }
-
-    @Override
-    public Optional<TaskPhone> findTaskPhoneById(Long id) {
-        return findAllTaskPhone().stream()
-                .filter(c -> c.getId() == id)
-                .findAny();
-    }
-
-    @Override
     public List<TaskCompany> findTaskCompaniesByTaskId(Long taskId) {
         return findAllTaskCompany().stream()
                 .filter(c -> c.getTaskId() == taskId)
@@ -125,16 +113,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskCategory> findTaskCategoriesByTaskId(Long taskId) {
+    public Optional<TaskCategory> findTaskCategoryById(Long id) {
         return findAllTaskCategory().stream()
-                .filter(c -> c.getTaskId() == taskId)
-                .collect(Collectors.toList());
+                .filter(c -> c.getId() == id)
+                .findAny();
     }
 
     @Override
-    public List<TaskPhone> findTaskPhonesByTaskId(Long taskId) {
-        return findAllTaskPhone().stream()
-                .filter(p -> p.getTaskId() == taskId)
+    public List<TaskCategory> findTaskCategoriesByTaskId(Long taskId) {
+        return findAllTaskCategory().stream()
+                .filter(c -> c.getTaskId() == taskId)
                 .collect(Collectors.toList());
     }
 
@@ -154,6 +142,8 @@ public class TaskServiceImpl implements TaskService {
         Task task = wrappedTask.get();
         task.setTaskCode(taskDto.getTaskCode());
         task.setTaskName(taskDto.getTaskName());
+        task.setMemberAssigned(taskDto.getMemberAssigned());
+        task.setMemberId(taskDto.getMemberId());
         taskMapper.updateTask(task);
         return task;
     }
@@ -185,36 +175,26 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskPhone modifyTaskPhone(Long id, TaskPhoneDto taskPhoneDto) {
-        Optional<TaskPhone> wrappedTaskPhone = findTaskPhoneById(id);
-        if (wrappedTaskPhone.isEmpty()) {
-            return null;
-        }
-        TaskPhone taskPhone = wrappedTaskPhone.get();
-        taskPhone.setPhoneNumber(taskPhoneDto.getPhoneNumber());
-        taskPhone.setTaskId(taskPhoneDto.getTaskId());
-        taskMapper.updateTaskPhone(taskPhone);
-        return taskPhone;
-    }
+    public OverallTaskDto modifyOverallTask(OverallTaskDto overallTaskDto) {
+        Optional<Task> wrappedTask = findTaskById(overallTaskDto.getId());
+        Optional<Member> member = Optional.ofNullable(memberMapper.findById(overallTaskDto.getMemberId()));
 
-    @Override
-    public OverallTaskDto modifyOverallTask(Long taskId, OverallTaskDto overallTaskDto) {
-        if (findOverallTaskById(taskId).isEmpty()) {
+        if (wrappedTask.isEmpty()) {
             return null;
         }
-        OverallTaskDto overallTask = findOverallTaskById(taskId).get();
-        overallTask.setTaskCode(overallTaskDto.getTaskCode());
-        overallTask.setTaskName(overallTaskDto.getTaskName());
-        Member member = memberMapper.findById(overallTaskDto.getMemberId());
-        if (member == null) {
-            return null;
-        }
-        overallTask.setMemberId(member.getId());
-        overallTask.setCategory(overallTaskDto.getCategory());
-        overallTask.setCompanyName(overallTaskDto.getCompanyName());
-        overallTask.setPhoneNumber(overallTaskDto.getPhoneNumber());
-        taskMapper.updateOverallTask(overallTask);
-        overallTaskDto.setId(taskId);
+
+        Task task = wrappedTask.get();
+        task.setTaskCode(overallTaskDto.getTaskCode());
+        task.setTaskName(overallTaskDto.getTaskName());
+        task.setMemberAssigned(member.isPresent());
+        task.setMemberId(member.orElse(null).getId());
+        taskMapper.updateTask(task);
+
+        overallTaskDto.getCompanies().stream()
+                .forEach(c -> modifyTaskCompany(c.getId(), c));
+        overallTaskDto.getCategories().stream()
+                .forEach(c -> modifyTaskCategory(c.getId(), c));
+
         return overallTaskDto;
     }
 
@@ -235,20 +215,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void deleteTaskPhoneById(Long id) {
-        if (findTaskPhoneById(id).isEmpty()) {
-            throw new IllegalStateException();
-        }
-        taskMapper.deleteTaskPhoneByTaskId(id);
-    }
-
-    @Override
     public void deleteOverallTaskById(Long id) {
         if (findOverallTaskById(id).isEmpty()) {
             throw new IllegalStateException();
         }
         taskMapper.deleteTaskCategoryByTaskId(id);
-        taskMapper.deleteTaskPhoneByTaskId(id);
         taskMapper.deleteTaskCompanyByTaskId(id);
         taskMapper.deleteTaskById(id);
     }

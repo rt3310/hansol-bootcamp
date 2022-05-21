@@ -14,11 +14,13 @@ public class Task {
     private Long id;
     private String taskCode;
     private String taskName;
+    private Boolean memberAssigned;
     private Long memberId;
 
-    public Task(String taskCode, String taskName, Long memberId) {
+    public Task(String taskCode, String taskName, Boolean memberAssigned, Long memberId) {
         this.taskCode = taskCode;
         this.taskName = taskName;
+        this.memberAssigned = memberAssigned;
         this.memberId = memberId;
     }
 }
