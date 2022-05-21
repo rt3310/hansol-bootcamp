@@ -47,10 +47,10 @@ public class TaskServiceImpl implements TaskService {
         Member member = memberMapper.findById(overallTaskDto.getMemberId());
         Task task = overallTaskDto.toTask();
         taskMapper.saveTask(task);
-        if (member != null) {
-            memberMapper.save(member);
+        if (member == null) {
+            throw new IllegalStateException("member not exist");
         }
-
+        memberMapper.save(member);
         Long taskId = task.getId();
         overallTaskDto.toTaskCompanies().stream()
                 .forEach(c -> taskMapper.saveTaskCompany(c));
@@ -137,7 +137,10 @@ public class TaskServiceImpl implements TaskService {
     public Task modifyTask(Long id, TaskDto taskDto) {
         Optional<Task> wrappedTask = findTaskById(id);
         if (wrappedTask.isEmpty()) {
-            return null;
+            throw new IllegalStateException("task not exist");
+        }
+        if (memberMapper.findById(taskDto.getMemberId()) == null) {
+            throw new IllegalStateException("member not exist");
         }
         Task task = wrappedTask.get();
         task.setTaskCode(taskDto.getTaskCode());
@@ -152,7 +155,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskCompany modifyTaskCompany(Long id, TaskCompanyDto taskCompanyDto) {
         Optional<TaskCompany> wrappedTaskCompany = findTaskCompanyById(id);
         if (wrappedTaskCompany.isEmpty()) {
-            return null;
+            throw new IllegalStateException("company not exist");
         }
         TaskCompany taskCompany = wrappedTaskCompany.get();
         taskCompany.setCompanyName(taskCompanyDto.getCompanyName());
@@ -165,7 +168,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskCategory modifyTaskCategory(Long id, TaskCategoryDto taskCategoryDto) {
         Optional<TaskCategory> wrappedTaskCategory = findTaskCategoryById(id);
         if (wrappedTaskCategory.isEmpty()) {
-            return null;
+            throw new IllegalStateException("category not exist");
         }
         TaskCategory taskCategory = wrappedTaskCategory.get();
         taskCategory.setCategory(taskCategoryDto.getCategory());
@@ -180,7 +183,10 @@ public class TaskServiceImpl implements TaskService {
         Optional<Member> member = Optional.ofNullable(memberMapper.findById(overallTaskDto.getMemberId()));
 
         if (wrappedTask.isEmpty()) {
-            return null;
+            throw new IllegalStateException("task not exist");
+        }
+        if (member.isEmpty()) {
+            throw new IllegalStateException("member not exist");
         }
 
         Task task = wrappedTask.get();
@@ -201,7 +207,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTaskCompanyById(Long id) {
         if (findTaskCompanyById(id).isEmpty()) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("company not exist");
         }
         taskMapper.deleteTaskCategoryByTaskId(id);
     }
@@ -209,7 +215,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTaskCategoryById(Long id) {
         if (findTaskCategoryById(id).isEmpty()) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("category not exist");
         }
         taskMapper.deleteTaskCategoryByTaskId(id);
     }
@@ -217,7 +223,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteOverallTaskById(Long id) {
         if (findOverallTaskById(id).isEmpty()) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("task not exist");
         }
         taskMapper.deleteTaskCategoryByTaskId(id);
         taskMapper.deleteTaskCompanyByTaskId(id);

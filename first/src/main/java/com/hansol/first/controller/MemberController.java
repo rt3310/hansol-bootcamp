@@ -6,12 +6,14 @@ import com.hansol.first.response.Response;
 import com.hansol.first.service.MemberService;
 import com.hansol.first.service.ResponseService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -43,7 +45,12 @@ public class MemberController {
         if (bindingResult.hasErrors()) {
             return responseService.getFailResult("valid");
         }
-        return responseService.getResult("", memberService.modifyMember(id, memberDto));
+        try {
+            return responseService.getResult("", memberService.modifyMember(id, memberDto));
+        } catch (IllegalStateException e) {
+            log.info("error: {}", e.getMessage());
+            return responseService.getFailResult(e.getMessage());
+        }
     }
 
     @DeleteMapping("/member/{id}")

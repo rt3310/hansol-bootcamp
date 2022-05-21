@@ -39,6 +39,9 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public Member modifyMember(Long memberId, MemberDto memberDto) {
         Member member = memberMapper.findById(memberId);
+        if (member == null) {
+            throw new IllegalStateException("member not exist");
+        }
         member.setMemberName(memberDto.getMemberName());
         member.setMemberRank(memberDto.getMemberRank());
         member.setPhone(memberDto.getPhone());
