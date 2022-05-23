@@ -12,9 +12,8 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class TaskCompanyDto {
     private Long id;
-    @NotBlank
-    private String companyName;
     @NotNull
+    private String companyName;
     private Long taskId;
 
     public TaskCompanyDto(TaskCompany taskCompany) {

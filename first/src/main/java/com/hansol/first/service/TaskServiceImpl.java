@@ -44,18 +44,22 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public OverallTaskDto saveOverallTask(OverallTaskDto overallTaskDto) {
-        Member member = memberMapper.findById(overallTaskDto.getMemberId());
-        Task task = overallTaskDto.toTask();
-        taskMapper.saveTask(task);
-        if (member == null) {
+        if (memberMapper.findById(overallTaskDto.getMemberId()) == null) {
             throw new IllegalStateException("member not exist");
         }
-        memberMapper.save(member);
+        Task task = overallTaskDto.toTask();
+        taskMapper.saveTask(task);
         Long taskId = task.getId();
         overallTaskDto.toTaskCompanies().stream()
-                .forEach(c -> taskMapper.saveTaskCompany(c));
+                .forEach(c -> {
+                    c.setTaskId(taskId);
+                    taskMapper.saveTaskCompany(c);
+                });
         overallTaskDto.toTaskCategories().stream()
-                .forEach(c -> taskMapper.saveTaskCategory(c));
+                .forEach(c -> {
+                    c.setTaskId(taskId);
+                    taskMapper.saveTaskCategory(c);
+                });
 
         overallTaskDto.setId(taskId);
         return overallTaskDto;

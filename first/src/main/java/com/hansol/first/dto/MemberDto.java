@@ -4,15 +4,16 @@ import com.hansol.first.entity.Member;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Getter @Setter
 public class MemberDto {
-    @NotBlank
+    @NotEmpty
     private String memberName;
-    @NotBlank
+    @NotNull
     private String memberRank;
-    @NotBlank
+    @NotNull
     private String phone;
 
     public Member toMember() {

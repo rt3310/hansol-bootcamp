@@ -28,7 +28,7 @@
     </update>
     <update id="updateTaskMemberToNull">
         UPDATE task
-        SET member_id = NULL
+        SET member_id = NULL, member_assigned = FALSE
         WHERE member_id=#{memberId}
     </update>
     <select id="findAllTask" resultType="Task">

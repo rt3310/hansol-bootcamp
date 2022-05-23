@@ -4,16 +4,14 @@ import com.hansol.first.entity.Task;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Getter @Setter
 public class TaskDto {
-    @NotBlank
     private Long id;
-    @NotBlank
+    @NotNull
     private String taskCode;
-    @NotEmpty
+    @NotNull
     private String taskName;
     private Boolean memberAssigned;
     private Long memberId;

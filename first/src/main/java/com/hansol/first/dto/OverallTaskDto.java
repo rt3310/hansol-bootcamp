@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class OverallTaskDto {
     private Long id;
-    @NotBlank
+    @NotNull
     private String taskCode;
-    @NotEmpty
+    @NotNull
     private String taskName;
     private List<TaskCompanyDto> companies;
     private List<TaskCategoryDto> categories;
