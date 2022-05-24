@@ -25,6 +25,8 @@ public interface TaskMapper {
     void updateTaskMemberToNull(Long memberId);
 
     void deleteTaskById(Long id);
+    void deleteTaskCompanyById(Long id);
     void deleteTaskCompanyByTaskId(Long taskId);
+    void deleteTaskCategoryById(Long id);
     void deleteTaskCategoryByTaskId(Long taskId);
 }

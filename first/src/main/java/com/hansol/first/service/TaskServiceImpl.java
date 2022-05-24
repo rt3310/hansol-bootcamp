@@ -201,9 +201,17 @@ public class TaskServiceImpl implements TaskService {
         taskMapper.updateTask(task);
 
         overallTaskDto.getCompanies().stream()
-                .forEach(c -> modifyTaskCompany(c.getId(), c));
+                .forEach(c -> {
+                    if (c.getTaskId() == null) {
+                        deleteTaskCompanyById(c.getId());
+                    }
+                });
         overallTaskDto.getCategories().stream()
-                .forEach(c -> modifyTaskCategory(c.getId(), c));
+                .forEach(c -> {
+                    if (c.getTaskId() == null) {
+                        deleteTaskCategoryById(c.getId());
+                    }
+                });
 
         return overallTaskDto;
     }
@@ -213,7 +221,7 @@ public class TaskServiceImpl implements TaskService {
         if (findTaskCompanyById(id).isEmpty()) {
             throw new IllegalStateException("company not exist");
         }
-        taskMapper.deleteTaskCategoryByTaskId(id);
+        taskMapper.deleteTaskCompanyById(id);
     }
 
     @Override
@@ -221,7 +229,7 @@ public class TaskServiceImpl implements TaskService {
         if (findTaskCategoryById(id).isEmpty()) {
             throw new IllegalStateException("category not exist");
         }
-        taskMapper.deleteTaskCategoryByTaskId(id);
+        taskMapper.deleteTaskCategoryById(id);
     }
 
     @Override

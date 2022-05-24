@@ -43,8 +43,14 @@
     <delete id="deleteTaskById">
         DELETE FROM task WHERE id = #{id};
     </delete>
+    <delete id="deleteTaskCompanyById">
+        DELETE FROM task_company WHERE id = #{id};
+    </delete>
     <delete id="deleteTaskCompanyByTaskId">
         DELETE FROM task_company WHERE task_id = #{taskId};
+    </delete>
+    <delete id="deleteTaskCategoryById">
+        DELETE FROM task_category WHERE id = #{id};
     </delete>
     <delete id="deleteTaskCategoryByTaskId">
         DELETE FROM task_category WHERE task_id = #{taskId};
